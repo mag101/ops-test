@@ -1,0 +1,48 @@
+#!/bin/bash
+echo "Content-type: text/html"
+echo ""
+echo "<html><head><title>Bash as CGI"
+echo "</title></head><body>"
+
+echo "<h1>General system information for host $(hostname -s)</h1>"
+echo ""
+
+echo "<h1>Docker services</h1>"
+i=0
+while read line
+do
+if [ $i -eq 0 ]
+  then
+   echo "<a>$line</a></br>"
+   i=1
+   continue
+  fi
+id=$(echo $line| cut -d' ' -f1)
+
+echo "<a href='cgi-bin/printinfo?$id' > $line </a></br>"
+done < <(docker service ls)
+
+echo "<h1>containers</h1>"
+
+#echo "<pre> $(docker ps) </pre>"
+i=0
+while read line
+do
+if [ $i -eq 0 ]
+  then
+   echo "<a>$line</a></br>"
+   i=1
+   continue
+  fi
+id=$(echo $line| cut -d' ' -f1)
+
+echo "<a href='cgi-bin/printlog?$id' > $line </a></br>"
+done < <(docker ps)
+
+
+echo "<h1>Logged in user</h1>"
+echo "<pre> $(w) </pre>"
+
+echo "<center>Information generated on $(date)</center>"
+echo "</body></html>"
+
