@@ -77,6 +77,12 @@ resource "aws_instance" "master" {
     destination = "/etc"
 
   }
+  provisioner "remote-exec" {
+    inline = [
+         "sudo service lighttpd restart"
+         ]
+}
+
   tags = { 
     Name = "swarm-master"
   }
